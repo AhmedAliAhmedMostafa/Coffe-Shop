@@ -55,9 +55,9 @@ def get_token_auth_header():
 '''
 def check_permissions(permission, payload):
     if "permissions" not in payload:
-        raise AuthError("Payload must contain permissions array.", 403)
+        raise AuthError("Payload must contain permissions array.", 401)
     if permission not in payload['permissions']:
-        raise AuthError("The user isn't authorized to use this api", 403)
+        raise AuthError("The user isn't authorized to use this api", 401)
     return True
 '''
 @TODO implement verify_decode_jwt(token) method
@@ -87,9 +87,9 @@ def verify_decode_jwt(token):
             key_found = True
             break
     if not key_found :
-        raise AuthError({
+        raise AuthError(
             'Couldnot find RSA public key.'
-        }, 401)
+        , 401)
     else:
         try:
             payload = jwt.decode(
@@ -102,7 +102,7 @@ def verify_decode_jwt(token):
                 'n': rsa_public_key_data['n'],
                 },
                 audience=API_AUDIENCE,
-                issuer='https://' + AUTH0_DOMAIN + '/'
+                issuer='https://' + AUTH0_DOMAIN + '/',
                 algorithms=ALGORITHMS,
             )
 
